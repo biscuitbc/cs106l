@@ -60,7 +60,15 @@ struct Course {
  */
 void parse_csv(std::string filename, std::vector<Course> &courses) {
   /* (STUDENT TODO) Your code goes here... */
-  
+  std::ifstream file(filename);
+  std::string line;
+  std::getline(file, line);
+  while(std::getline(file, line))
+  {
+    std::vector<std::string>split_line = split(line, (char)',');
+    courses.push_back((Course){split_line[0], split_line[1], split_line[2]});
+  }
+  return;
 }
 
 /**
@@ -83,6 +91,22 @@ void parse_csv(std::string filename, std::vector<Course> &courses) {
  */
 void write_courses_offered(std::vector<Course> &all_courses) {
   /* (STUDENT TODO) Your code goes here... */
+    std::ofstream file("student_output/courses_offered.csv");
+    std::vector<Course>unoffered_courses;
+    file << "Title,Number of Units,Quarter\n";
+    for(auto course : all_courses)
+    {
+      if(course.quarter != "null")
+      {
+        file << course.title << "," << course.number_of_units << "," << course.quarter << '\n';
+      }
+      else
+      {
+        unoffered_courses.push_back(course);
+      }
+    }
+    unoffered_courses.swap(all_courses);
+    unoffered_courses.clear();
 }
 
 /**
@@ -100,6 +124,12 @@ void write_courses_offered(std::vector<Course> &all_courses) {
  */
 void write_courses_not_offered(std::vector<Course> &unlisted_courses) {
   /* (STUDENT TODO) Your code goes here... */
+  std::ofstream file("student_output/courses_not_offered.csv");
+  file << "Title,Number of Units,Quarter\n";
+  for(auto course : unlisted_courses)
+  {
+      file << course.title << "," << course.number_of_units << "," << course.quarter << '\n';
+  }
 }
 
 int main() {
