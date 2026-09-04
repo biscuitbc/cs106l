@@ -13,6 +13,7 @@ namespace cs106l {
 template <typename T> class unique_ptr {
 private:
   /* STUDENT TODO: What data must a unique_ptr keep track of? */
+  T* ptr;
 
 public:
   /**
@@ -20,18 +21,12 @@ public:
    * @param ptr The pointer to manage.
    * @note You should avoid using this constructor directly and instead use `make_unique()`.
    */
-  unique_ptr(T* ptr) {
-    /* STUDENT TODO: Implement the constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(T* ptr)");
-  }
+  unique_ptr(T* ptr) : ptr(ptr) {}
 
   /**
    * @brief Constructs a new `unique_ptr` from `nullptr`.
    */
-  unique_ptr(std::nullptr_t) {
-    /* STUDENT TODO: Implement the nullptr constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(std::nullptr_t)");
-  }
+  unique_ptr(std::nullptr_t) : ptr(nullptr) {}
 
   /**
    * @brief Constructs an empty `unique_ptr`.
@@ -45,6 +40,7 @@ public:
    */
   T& operator*() {
     /* STUDENT TODO: Implement the dereference operator */
+    return *ptr;
     throw std::runtime_error("Not implemented: operator*()");
   }
 
@@ -54,6 +50,7 @@ public:
    */
   const T& operator*() const {
     /* STUDENT TODO: Implement the dereference operator (const) */
+    return *ptr;
     throw std::runtime_error("Not implemented: operator*() const");
   }
 
@@ -64,6 +61,7 @@ public:
    */
   T* operator->() {
     /* STUDENT TODO: Implement the arrow operator */
+    return ptr;
     throw std::runtime_error("Not implemented: operator->()");
   }
 
@@ -74,6 +72,7 @@ public:
    */
   const T* operator->() const {
     /* STUDENT TODO: Implement the arrow operator */
+    return ptr;
     throw std::runtime_error("Not implemented: operator->() const");
   }
 
@@ -84,6 +83,7 @@ public:
    */
   operator bool() const {
     /* STUDENT TODO: Implement the boolean conversion operator */
+    return ptr != nullptr;
     throw std::runtime_error("Not implemented: operator bool() const");
   }
 
@@ -94,6 +94,26 @@ public:
    * - Implement the move constructor
    * - Implement the move assignment operator
    */
+   ~unique_ptr() noexcept
+   {
+    delete ptr;
+   } 
+   unique_ptr(unique_ptr const&) = delete;
+   unique_ptr& operator = (unique_ptr const&) = delete;
+   unique_ptr(unique_ptr&& rhs) noexcept
+   {
+    ptr = rhs.ptr;
+    rhs.ptr = nullptr;
+   }
+   unique_ptr& operator = (unique_ptr&& rhs) noexcept
+   {
+    if(this == &rhs) return *this;
+    delete ptr;
+    ptr = rhs.ptr;
+    rhs.ptr = nullptr;
+    return *this;
+   }
+   
 };
 
 /**
